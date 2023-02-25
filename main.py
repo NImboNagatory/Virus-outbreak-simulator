@@ -5,7 +5,7 @@ population = input("To simulate virus outbreak Input The population size >>> ")
 
 infected = input("Input the initially infected population size >>> ")
 
-# contact = input("Input the percentage of infection rate after contact >>> ")
+contact = input("Input the percentage of infection rate after contact >>> ")
 
 overcome = input("Input how many days are needed for infection to pass >>> ")
 
@@ -13,7 +13,7 @@ mortality = input("Input the percentage of mortality rate >>> ")
 
 days = input("Input how many days do you want to simulate >>> ")
 
-ground_zero = InfectionSimulator()
+ground_zero = InfectionSimulator(contact)
 
 ground_zero.create_population(population)
 

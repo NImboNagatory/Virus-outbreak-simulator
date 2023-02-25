@@ -2,10 +2,11 @@ from random import choice, randint
 
 
 class InfectionSimulator:
-    def __init__(self):
+    def __init__(self, contact):
         self.infected = 0
         self.dead = 0
         self.data = []
+        self.infect_rate = contact
 
     def infect(self, input_count):
         for spread in range(int(input_count)):
@@ -36,6 +37,7 @@ class InfectionSimulator:
     def spread(self, contact_spread):
         if randint(0, 100) > int(contact_spread):
             self.infected += 1
+
 
     def create_population(self, input_data):
 
