@@ -20,6 +20,7 @@ ground_zero.create_population(population)
 ground_zero.infect(infected)
 
 for day in range(1, int(days)+1):
+    ground_zero.rip_check(overcome, mortality)
     print(f"\n-----Day #{day}-----")
     print(f"Percentage of People infected: {(ground_zero.infected/len(ground_zero.data))*100}%\n")
     print(f"Percentage of people dead: {(ground_zero.dead/len(ground_zero.data))*100}%\n")

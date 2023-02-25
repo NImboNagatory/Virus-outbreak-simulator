@@ -17,27 +17,31 @@ class InfectionSimulator:
                     self.infected += 1
                     break
 
-    def rip_check(self, input_data, overcome_days, mortality_rate):
-        for person_infected in range(len(input_data)):
-            if not input_data[person_infected]['dead'] and input_data[person_infected]['infected']:
+    def rip_check(self, overcome_days, mortality_rate):
+        for person_infected in range(len(self.data)):
+            if not self.data[person_infected]['dead'] and self.data[person_infected]['infected']:
                 if randint(0, 100) > int(mortality_rate):
-                    if input_data[person_infected]['days_infected'] < int(overcome_days):
-                        input_data[person_infected]['days_infected'] += 1
+                    if self.data[person_infected]['days_infected'] < int(overcome_days):
+                        self.data[person_infected]['days_infected'] += 1
+                        self.spread(person_infected)
                     else:
-                        input_data[person_infected]['infected'] = False
-                        input_data[person_infected]['was_infected_for'] = input_data[person_infected]['days_infected']
-                        input_data[person_infected]['days_infected'] = 0
+                        self.data[person_infected]['infected'] = False
+                        self.data[person_infected]['was_infected_for'] = self.data[person_infected]['days_infected']
+                        self.data[person_infected]['days_infected'] = 0
                         self.infected = self.infected - 1
                 else:
-                    input_data[person_infected]['dead'] = True
+                    self.data[person_infected]['dead'] = True
                     self.infected = self.infected - 1
-            if input_data[person_infected]['dead']:
-                self.dead += 1
+                    self.dead += 1
 
-    def spread(self, contact_spread):
-        if randint(0, 100) > int(contact_spread):
-            self.infected += 1
-
+    def spread(self, infected_person):
+        if randint(0, 100) > int(self.infect_rate):
+            if randint(1, 2) == 1:
+                self.data[int(infected_person) + 1]['infected'] = True
+                self.infected += 1
+            else:
+                self.data[int(infected_person) - 1]['infected'] = True
+                self.infected += 1
 
     def create_population(self, input_data):
 
