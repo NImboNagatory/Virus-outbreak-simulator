@@ -6,6 +6,7 @@ from math import sqrt
 
 class InfectionSimulator:
     """Model of infection simulator"""
+
     def __init__(self):
         self.infected = 0
         self.dead = 0
@@ -70,6 +71,9 @@ class InfectionSimulator:
             root = round(root, 0)
             self.sqrt_size = int(root)
             self.population = self.sqrt_size ** 2
+            print(self.population)
+        else:
+            self.sqrt_size = int(sqrt(self.population))
         self.create_population(int(self.population))
         self.infect(int(self.infected))
         self.print_daily_news()
@@ -87,7 +91,8 @@ class InfectionSimulator:
     def rip_check(self, overcome_days, mortality_rate):
         """Checks if person got well or died"""
         for person_infected in range(len(self.population_data)):
-            if not self.population_data[person_infected]['dead'] and self.population_data[person_infected]['infected']:
+            if not self.population_data[person_infected]['dead'] and\
+                    self.population_data[person_infected]['infected']:
                 if randint(0, 100) > mortality_rate:
                     if self.population_data[person_infected]['days_infected'] < int(overcome_days):
                         self.population_data[person_infected]['days_infected'] += 1
@@ -130,9 +135,14 @@ class InfectionSimulator:
     def create_population(self, input_data):
         """Creates instance of population"""
         for person in range(int(input_data)):
-            self.population_data.append(
-                {"person": person, "infected": False, "days_infected": 0, "was_infected_for": 0, "dead": False,
-                 "is_quarantined": False})
+            self.population_data.append({
+                'person': person,
+                'infected': False,
+                'days_infected': 0,
+                'was_infected_for': 0,
+                'dead': False,
+                'is_quarantined': False
+            })
 
     def print_daily_news(self):
         """Prints the results of a day"""
@@ -141,7 +151,9 @@ class InfectionSimulator:
             system('cls')
             self.rip_check(self.overcome_days, self.mortality_rate)
             print(f"\n-----Day #{day}-----")
-            print(f"Percentage of People infected: {round((self.infected / (len(self.population_data) - self.dead)) * 100, 2)}%\n")
+            print(
+                f"Percentage of People infected:"
+                f" {round((self.infected / (len(self.population_data) - self.dead)) * 100, 2)}%\n")
             print(f"Percentage of people dead: {round((self.dead / len(self.population_data)) * 100, 2)}%\n")
             print(f"Total people infected: {self.infected}/{len(self.population_data)}\n")
             print(f"Total people dead: {self.dead}/{len(self.population_data)}\n")
