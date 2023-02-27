@@ -3,7 +3,9 @@ from os import system
 from time import sleep
 from math import sqrt
 
+
 class InfectionSimulator:
+    """Model of infection simulator"""
     def __init__(self):
         self.infected = 0
         self.dead = 0
@@ -11,7 +13,8 @@ class InfectionSimulator:
         bad_input = "Bad Input! only use numeric characters"
         while True:
             try:
-                self.population = int(input("To simulate virus outbreak Input The population size >>> "))
+                self.population = int(input("To simulate virus outbreak"
+                                            " Input The population size >>> "))
                 break
             except ValueError:
                 print(bad_input)
@@ -27,7 +30,8 @@ class InfectionSimulator:
                 system('cls')
         while True:
             try:
-                self.infect_rate = float(input("Input the percentage of infection rate after contact >>> "))
+                self.infect_rate = float(input("Input the percentage of infection "
+                                               "rate after contact >>> "))
                 break
             except ValueError:
                 print(bad_input)
@@ -35,7 +39,8 @@ class InfectionSimulator:
                 system('cls')
         while True:
             try:
-                self.overcome_days = input("Input how many days are needed for infection to pass >>> ")
+                self.overcome_days = input("Input how many days are "
+                                           "needed for infection to pass >>> ")
                 break
             except ValueError:
                 print(bad_input)
@@ -43,7 +48,8 @@ class InfectionSimulator:
                 system('cls')
         while True:
             try:
-                self.mortality_rate = float(input("Input the percentage of mortality rate >>> "))
+                self.mortality_rate = float(input("Input the percentage "
+                                                  "of mortality rate >>> "))
                 break
             except ValueError:
                 print(bad_input)
@@ -51,7 +57,8 @@ class InfectionSimulator:
                 system('cls')
         while True:
             try:
-                self.simulate_days = int(input("Input how many days do you want to simulate >>> "))
+                self.simulate_days = int(input("Input how many days do "
+                                               "you want to simulate >>> "))
                 break
             except ValueError:
                 print(bad_input)
@@ -59,7 +66,7 @@ class InfectionSimulator:
                 system('cls')
 
         root = sqrt(self.population)
-        if int(root + .5)**2 != self.population:
+        if int(root + .5) ** 2 != self.population:
             root = round(root, 0)
             self.sqrt_size = int(root)
             self.population = self.sqrt_size ** 2
@@ -68,6 +75,7 @@ class InfectionSimulator:
         self.print_daily_news()
 
     def infect(self, input_count):
+        """Initially infects the population"""
         for spread in range(int(input_count)):
             while True:
                 incident = self.population_data.index(choice(self.population_data))
@@ -77,6 +85,7 @@ class InfectionSimulator:
                     break
 
     def rip_check(self, overcome_days, mortality_rate):
+        """Checks if person got well or died"""
         for person_infected in range(len(self.population_data)):
             if not self.population_data[person_infected]['dead'] and self.population_data[person_infected]['infected']:
                 if randint(0, 100) > mortality_rate:
@@ -96,10 +105,12 @@ class InfectionSimulator:
                     self.dead += 1
 
     def quarantine_person(self, person_infected):
+        """Used to quarantine the infected person to stop infection spread"""
         if randint(0, 100) < 2:
             self.population_data[int(person_infected)]['is_quarantined'] = True
 
     def spread(self, infected_person):
+        """Used to determine the spread of infection"""
         if randint(0, 100) < self.infect_rate:
             if not self.population_data[int(infected_person)]['is_quarantined']:
                 if randint(1, 2) == 1:
@@ -117,12 +128,14 @@ class InfectionSimulator:
                         pass
 
     def create_population(self, input_data):
+        """Creates instance of population"""
         for person in range(int(input_data)):
             self.population_data.append(
                 {"person": person, "infected": False, "days_infected": 0, "was_infected_for": 0, "dead": False,
                  "is_quarantined": False})
 
     def print_daily_news(self):
+        """Prints the results of a day"""
         for day in range(1, self.simulate_days + 1):
             sleep(0.2)
             system('cls')
