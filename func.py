@@ -35,16 +35,22 @@ class InfectionSimulator:
                     self.dead += 1
 
     def spread(self, infected_person):
-        if randint(0, 100) > int(self.infect_rate):
+        if randint(0, 100) < int(self.infect_rate):
             if randint(1, 2) == 1:
-                self.data[int(infected_person) + 1]['infected'] = True
-                self.infected += 1
+                try:
+                    self.data[int(infected_person) + 1]['infected'] = True
+                    self.infected += 1
+                except IndexError:
+                    pass
+
             else:
-                self.data[int(infected_person) - 1]['infected'] = True
-                self.infected += 1
+                try:
+                    self.data[int(infected_person) - 1]['infected'] = True
+                    self.infected += 1
+                except IndexError:
+                    pass
 
     def create_population(self, input_data):
-
         for person in range(int(input_data)):
             self.data.append(
                 {"person": person, "infected": False, "days_infected": 0, "was_infected_for": 0, "dead": False})
