@@ -1,29 +1,63 @@
 from func import InfectionSimulator
+from os import system
+from time import sleep
 
+print("Welcome to the Virus Outbreak Simulator\n\n")
 
-population = input("To simulate virus outbreak Input The population size >>> ")
+input("To start press enter >>> ")
 
-infected = input("Input the initially infected population size >>> ")
+sleep(1)
+system('cls')
 
-contact = input("Input the percentage of infection rate after contact >>> ")
+bad_input = "Bad Input! only use numeric characters"
 
-overcome = input("Input how many days are needed for infection to pass >>> ")
+while True:
+    try:
+        population = int(input("To simulate virus outbreak Input The population size >>> "))
+        break
+    except ValueError:
+        print(bad_input)
+        sleep(1)
+        system('cls')
+while True:
+    try:
+        infected = int(input("Input the initially infected population size >>> "))
+        break
+    except ValueError:
+        print(bad_input)
+        sleep(1)
+        system('cls')
+while True:
+    try:
+        contact = input("Input the percentage of infection rate after contact >>> ")
+        break
+    except ValueError:
+        print(bad_input)
+        sleep(1)
+        system('cls')
+while True:
+    try:
+        overcome = input("Input how many days are needed for infection to pass >>> ")
+        break
+    except ValueError:
+        print(bad_input)
+        sleep(1)
+        system('cls')
+while True:
+    try:
+        mortality = input("Input the percentage of mortality rate >>> ")
+        break
+    except ValueError:
+        print(bad_input)
+        sleep(1)
+        system('cls')
+while True:
+    try:
+        days = input("Input how many days do you want to simulate >>> ")
+        break
+    except ValueError:
+        print(bad_input)
+        sleep(1)
+        system('cls')
 
-mortality = input("Input the percentage of mortality rate >>> ")
-
-days = input("Input how many days do you want to simulate >>> ")
-
-ground_zero = InfectionSimulator(contact)
-
-ground_zero.create_population(population)
-
-ground_zero.infect(infected)
-
-for day in range(1, int(days)+1):
-    ground_zero.rip_check(overcome, mortality)
-    print(f"\n-----Day #{day}-----")
-    print(f"Percentage of People infected: {(ground_zero.infected/len(ground_zero.data))*100}%\n")
-    print(f"Percentage of people dead: {(ground_zero.dead/len(ground_zero.data))*100}%\n")
-    print(f"Total people infected: {ground_zero.infected}/{len(ground_zero.data)}\n")
-    print(f"Total people dead: {ground_zero.dead}/{len(ground_zero.data)}\n")
-    cont_inp = input("\nPress enter to continue >>> ")
+InfectionSimulator(contact, population, infected, overcome, mortality, days)
