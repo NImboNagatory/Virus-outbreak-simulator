@@ -4,13 +4,15 @@ from time import sleep
 from math import sqrt
 
 
-class InfectionSimulator:
+class Simulation:
     """Model of infection simulator"""
 
     def __init__(self):
+        self.day_number = 1
+
         self.population = int(input("To simulate virus outbreak"
                                     " Input The population size >>> "))
-        self.initially_infected = int(input("Input initially infected population size >>> "))
+        self.initially_infected = float(input("Input initially infected population percentage >>> "))
         self.infect_probability = float(input("Input the percentage of infection rate after contact >>> "))
         self.heal_days = input("Input how many days are needed to heal >>> ")
         self.mortality_percent = float(input("Input the percentage of mortality rate >>> "))
@@ -63,91 +65,10 @@ class Person:
             elif self.days_infected == simulation.heal_days:
                 self.heal()
 
-    # def infect(self, simulation):
-    #     """Initially infects the population"""
-    #     for spread in range(int(simulation.initially_infected)):
-    #         while True:
-    #             incident = self.population_data.index(choice(self.population_data))
-    #             if not self.population_data[incident]["infected"]:
-    #                 self.population_data[incident]["infected"] = True
-    #                 self.infected += 1
-    #                 break
-
-    # def rip_check(self, overcome_days, mortality_rate):
-    #     """Checks if person got well or died"""
-    #     for person_infected in range(len(self.population_data)):
-    #         if not self.population_data[person_infected]['dead'] and \
-    #                 self.population_data[person_infected]['infected']:
-    #             if randint(0, 100) > mortality_rate:
-    #                 if self.population_data[person_infected]['days_infected'] < int(overcome_days):
-    #                     self.population_data[person_infected]['days_infected'] += 1
-    #                     self.quarantine_person(person_infected)
-    #                     self.spread(person_infected)
-    #                 else:
-    #                     self.population_data[person_infected]['infected'] = False
-    #                     self.population_data[person_infected]['was_infected_for'] = \
-    #                         self.population_data[person_infected]['days_infected']
-    #                     self.population_data[person_infected]['days_infected'] = 0
-    #                     self.infected = self.infected - 1
-    #             else:
-    #                 self.population_data[person_infected]['dead'] = True
-    #                 self.infected = self.infected - 1
-    #                 self.dead += 1
-    #
-    # def quarantine_person(self, person_infected):
-    #     """Used to quarantine the infected person to stop infection spread"""
-    #     if randint(0, 100) < 2:
-    #         self.population_data[int(person_infected)]['is_quarantined'] = True
-    #
-    # def spread(self, infected_person):
-    #     """Used to determine the spread of infection"""
-    #     if randint(0, 100) < self.infect_rate:
-    #         if not self.population_data[int(infected_person)]['is_quarantined']:
-    #             if randint(1, 2) == 1:
-    #                 try:
-    #                     self.population_data[int(infected_person) + 1]['infected'] = True
-    #                     self.infected += 1
-    #                 except IndexError:
-    #                     pass
-    #
-    #             else:
-    #                 try:
-    #                     self.population_data[int(infected_person) - 1]['infected'] = True
-    #                     self.infected += 1
-    #                 except IndexError:
-    #                     pass
-    #
-    # def create_population(self, input_data):
-    #     """Creates instance of population"""
-    #     for person in range(int(input_data)):
-    #         self.population_data.append({
-    #             'person': person,
-    #             'infected': False,
-    #             'days_infected': 0,
-    #             'was_infected_for': 0,
-    #             'dead': False,
-    #             'is_quarantined': False
-    #         })
-    #
-    # def print_daily_news(self):
-    #     """Prints the results of a day"""
-    #     for day in range(1, self.simulate_days + 1):
-    #         sleep(0.2)
-    #         system('cls')
-    #         self.rip_check(self.overcome_days, self.mortality_rate)
-    #         print(f"\n-----Day #{day}-----")
-    #         print(
-    #             f"Percentage of People infected:"
-    #             f" {round((self.infected / (len(self.population_data) - self.dead)) * 100, 2)}%\n")
-    #         print(f"Percentage of people dead: {round((self.dead / len(self.population_data)) * 100, 2)}%\n")
-    #         print(f"Total people infected: {self.infected}/{len(self.population_data)}\n")
-    #         print(f"Total people dead: {self.dead}/{len(self.population_data)}\n")
-    #         input("\nPress enter to continue >>> ")
-    #
-
 
 class Population:
     """Class model for initial population creation"""
+
     def __init__(self, simulation):
         self.population_data = []
 
@@ -157,3 +78,46 @@ class Population:
                 person = Person()
                 row.append(person)
             self.population_data.append(row)
+
+    def initial_infection(self, simulation):
+        """Initially infect parts of the population"""
+        infected_count = int(round(simulation.initially_infected * simulation.population, 0))
+
+        infections = 0
+
+        while infections < infected_count:
+            x_cord = randint(0, simulation.sqrt_size - 1)
+            y_cord = randint(0, simulation.sqrt_size - 1)
+            if not self.population_data[x_cord][y_cord]:
+                self.population_data[x_cord][y_cord].is_infected = True
+                self.population_data[x_cord][y_cord].days_infected = 1
+                infections += 1
+
+    def update(self, simulation):
+        """Update population data by updationg chach individual person"""
+        for row in self.population_data:
+            for person in row:
+                person.health_check_up(simulation)
+
+    def display_statistics(self, simulation):
+        """Show the result of each day"""
+        total_persons_infected = 0
+        total_persons_dead = 0
+
+        for row in self.population_data:
+            for person in row:
+                if person.is_infected:
+                    total_persons_infected += 1
+                    if person.is_dead:
+                        total_persons_dead += 1
+
+        print(f"\n-----Day #{simulation.day_number}-----")
+        print(f"Percentage of People infected:"
+              f"{round((total_persons_infected / (len(simulation.population))) * 100, 2)}%\n")
+        print(f"Percentage of people dead: "
+              f"{round((total_persons_dead / len(simulation.population)) * 100, 2)}%\n")
+        print(f"Total people infected: "
+              f"{total_persons_infected}/{len(simulation.population)}\n")
+        print(f"Total people dead: "
+              f"{total_persons_dead}/{len(self.population_data)}\n")
+        input("\nPress enter to continue >>> ")
