@@ -1,4 +1,5 @@
 from random import choice, randint
+from tkinter import Tk
 from os import system
 from time import sleep
 from math import sqrt
@@ -81,14 +82,14 @@ class Population:
 
     def initial_infection(self, simulation):
         """Initially infect parts of the population"""
-        infected_count = int(round(simulation.initially_infected * simulation.population, 0))
+        infected_count = int(round((simulation.initially_infected/100) * simulation.population, 0))
 
         infections = 0
 
         while infections < infected_count:
             x_cord = randint(0, simulation.sqrt_size - 1)
             y_cord = randint(0, simulation.sqrt_size - 1)
-            if not self.population_data[x_cord][y_cord]:
+            if not self.population_data[x_cord][y_cord].is_infected:
                 self.population_data[x_cord][y_cord].is_infected = True
                 self.population_data[x_cord][y_cord].days_infected = 1
                 infections += 1
@@ -165,11 +166,27 @@ class Population:
 
         print(f"\n-----Day #{simulation.day_number}-----")
         print(f"Percentage of People infected:"
-              f"{round((total_persons_infected / (len(simulation.population))) * 100, 2)}%\n")
+              f"{round((total_persons_infected / simulation.population) * 100, 2)}%\n")
         print(f"Percentage of people dead: "
-              f"{round((total_persons_dead / len(simulation.population)) * 100, 2)}%\n")
+              f"{round((total_persons_dead / simulation.population) * 100, 2)}%\n")
         print(f"Total people infected: "
-              f"{total_persons_infected}/{len(simulation.population)}\n")
+              f"{total_persons_infected}/{simulation.population}\n")
         print(f"Total people dead: "
-              f"{total_persons_dead}/{len(self.population_data)}\n")
+              f"{total_persons_dead}/{simulation.population}\n")
         input("\nPress enter to continue >>> ")
+
+
+def graphics(simulation, population, canvas):
+    """A helper function to display infection spreading amongst population using tkinter canvas"""
+    square_dim = 600//simulation.sqrt_size
+    for row in range(simulation.sqrt_size):
+        y_cord = row*square_dim
+        for column in range(simulation.sqrt_size):
+            x_cord = column*square_dim
+            if population.population_data[row][column].is_dead:
+                canvas.create_rectangle(x_cord, y_cord, x_cord+square_dim, y_cord+square_dim, fill="red")
+            else:
+                if population.population_data[row][column].is_infected:
+                    canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="yellow")
+                else:
+                    canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="green")
