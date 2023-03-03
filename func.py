@@ -74,7 +74,7 @@ class Population:
 
         for i in range(simulation.sqrt_size):
             row = []
-            for b in range(simulation.sqrt_size):
+            for j in range(simulation.sqrt_size):
                 person = Person()
                 row.append(person)
             self.population_data.append(row)
@@ -93,8 +93,60 @@ class Population:
                 self.population_data[x_cord][y_cord].days_infected = 1
                 infections += 1
 
+    def spread_infection(self, simulation):
+        """Spread infection in 2d array based on infected persons position.
+         the infection can spread above, below, right and left of the infected"""
+        for row in range(simulation.sqrt_size):
+            for column in range(simulation.sqrt_size):
+                if not self.population_data[row][column].is_dead:
+                    if row == 0:
+                        if column == 0:
+                            if self.population_data[row][column + 1].is_infected or \
+                                    self.population_data[row + 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                        elif column == simulation.sqrt_size - 1:
+                            if self.population_data[row][column - 1].is_infected or \
+                                    self.population_data[row + 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                        else:
+                            if self.population_data[row][column - 1].is_infected or \
+                                    self.population_data[row][column + 1].is_infected or \
+                                    self.population_data[row + 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                    elif row == simulation.sqrt_size - 1:
+                        if column == 0:
+                            if self.population_data[row][column + 1].is_infected or \
+                                    self.population_data[row - 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                        elif column == simulation.sqrt_size - 1:
+                            if self.population_data[row][column - 1].is_infected or \
+                                    self.population_data[row - 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                        else:
+                            if self.population_data[row][column - 1].is_infected or \
+                                    self.population_data[row][column + 1].is_infected or \
+                                    self.population_data[row - 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                    else:
+                        if column == 0:
+                            if self.population_data[row][column + 1].is_infected or \
+                                    self.population_data[row + 1][column].is_infected or \
+                                    self.population_data[row - 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                        elif column == simulation.sqrt_size - 1:
+                            if self.population_data[row][column - 1].is_infected or \
+                                    self.population_data[row + 1][column].is_infected or \
+                                    self.population_data[row - 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+                        else:
+                            if self.population_data[row][column - 1].is_infected or \
+                                    self.population_data[row][column + 1].is_infected or \
+                                    self.population_data[row + 1][column].is_infected or \
+                                    self.population_data[row - 1][column].is_infected:
+                                self.population_data[row][column].infect(simulation)
+
     def update(self, simulation):
-        """Update population data by updationg chach individual person"""
+        """Update population data by checking individual person"""
         for row in self.population_data:
             for person in row:
                 person.health_check_up(simulation)
