@@ -59,7 +59,7 @@ class Person:
         """Do a check on a person if he got well or died"""
         if not self.is_dead and self.days_infected:
             self.is_infected += 1
-            if randint(0, 100) < 2:
+            if randint(0, 100) < 2 and not self.quarantined:
                 self.quarantine()
             elif randint(0, 100) < simulation.mortality_percent and not self.quarantined:
                 self.die()
@@ -82,7 +82,7 @@ class Population:
 
     def initial_infection(self, simulation):
         """Initially infect parts of the population"""
-        infected_count = int(round((simulation.initially_infected/100) * simulation.population, 0))
+        infected_count = int(round((simulation.initially_infected / 100) * simulation.population, 0))
 
         infections = 0
 
@@ -173,20 +173,23 @@ class Population:
               f"{total_persons_infected}/{simulation.population}\n")
         print(f"Total people dead: "
               f"{total_persons_dead}/{simulation.population}\n")
-        input("\nPress enter to continue >>> ")
 
 
 def graphics(simulation, population, canvas):
     """A helper function to display infection spreading amongst population using tkinter canvas"""
-    square_dim = 600//simulation.sqrt_size
+    print("i ran")
+    square_dim = 600 // simulation.sqrt_size
     for row in range(simulation.sqrt_size):
-        y_cord = row*square_dim
+        y_cord = row * square_dim
         for column in range(simulation.sqrt_size):
-            x_cord = column*square_dim
+            x_cord = column * square_dim
             if population.population_data[row][column].is_dead:
-                canvas.create_rectangle(x_cord, y_cord, x_cord+square_dim, y_cord+square_dim, fill="red")
+                canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="red")
             else:
                 if population.population_data[row][column].is_infected:
-                    canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="yellow")
+                    if population.population_data[row][column].quarantined:
+                        canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="blue")
+                    else:
+                        canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="yellow")
                 else:
                     canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="green")
