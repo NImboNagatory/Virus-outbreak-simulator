@@ -1,6 +1,5 @@
 from func import Simulation, Population, graphics
 from tkinter import Tk, Canvas, Entry
-from time import sleep
 
 
 print("Welcome to the Virus Outbreak Simulator\n\n")
@@ -18,7 +17,7 @@ sim_window.attributes("-topmost", True)
 sim_window.title("Epidemic Outbreak")
 
 sim_canvas = Canvas(sim_window, width=canvas_width, height=canvas_height, bg="lightblue")
-sim_canvas.grid(padx=(5, 5), pady=(5, 5), row=1, column=0)
+sim_canvas.grid(row=1, column=0, sticky='')
 
 info_text = Entry(sim_window)
 info_text.grid(row=0, column=0)

@@ -1,7 +1,4 @@
-from random import choice, randint
-from tkinter import Tk
-from os import system
-from time import sleep
+from random import randint
 from math import sqrt
 
 
@@ -34,12 +31,11 @@ class Person:
     def __init__(self):
         self.is_infected = False
         self.is_dead = False
-        self.quarantined = False
         self.days_infected = 0
 
     def infect(self, simulation):
         """Infect a person"""
-        if randint(0, 100) < simulation.infect_probability and not self.quarantined:
+        if randint(0, 100) < simulation.infect_probability:
             self.is_infected = True
 
     def heal(self):
@@ -47,21 +43,15 @@ class Person:
         self.is_infected = False
         self.days_infected = 0
 
-    def quarantine(self):
-        """Quarantine infected person to prevent future infection spread"""
-        self.quarantined = True
-
     def die(self):
         """Kill a person"""
         self.is_dead = True
 
     def health_check_up(self, simulation):
         """Do a check on a person if he got well or died"""
-        if not self.is_dead and self.days_infected:
-            self.is_infected += 1
-            if randint(0, 100) < 2 and not self.quarantined:
-                self.quarantine()
-            elif randint(0, 100) < simulation.mortality_percent and not self.quarantined:
+        if not self.is_dead and self.is_infected:
+            self.days_infected += 1
+            if randint(0, 100) < simulation.mortality_percent:
                 self.die()
             elif self.days_infected == simulation.heal_days:
                 self.heal()
@@ -187,9 +177,6 @@ def graphics(simulation, population, canvas):
                 canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="red")
             else:
                 if population.population_data[row][column].is_infected:
-                    if population.population_data[row][column].quarantined:
-                        canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="blue")
-                    else:
-                        canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="yellow")
+                    canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="yellow")
                 else:
                     canvas.create_rectangle(x_cord, y_cord, x_cord + square_dim, y_cord + square_dim, fill="green")
